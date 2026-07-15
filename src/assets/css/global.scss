@@ -1,0 +1,25 @@
+html {
+  --uno: text-color-1 antialiased select-none overscroll-none;
+
+  color-scheme: light;
+
+  body {
+    --uno: text-sm;
+
+    * {
+      outline: none !important;
+    }
+
+    img {
+      -webkit-user-drag: none;
+    }
+
+    a {
+      --uno: "hover:color-primary";
+    }
+
+    mark {
+      background-color: #ffe58f;
+    }
+  }
+}
