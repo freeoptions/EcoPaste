@@ -3,9 +3,9 @@
     "windows": {
       "digestAlgorithm": "sha256",
       "nsis": {
-        "displayLanguageSelector": true,
+        "displayLanguageSelector": false,
         "installMode": "both",
-        "languages": ["English", "SimpChinese"]
+        "languages": ["SimpChinese"]
       }
     }
   },
