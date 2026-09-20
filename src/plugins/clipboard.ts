@@ -6,6 +6,7 @@ import {
 import { clipboardStore } from "@/stores/clipboard";
 import { ignoreNextClipboardChange } from "@/stores/clipboardRuntime";
 import type { DatabaseSchemaHistory } from "@/types/database";
+import { formatJsonText } from "@/utils/json";
 import { wait } from "@/utils/shared";
 import { paste } from "./paste";
 
@@ -16,7 +17,7 @@ export const writeToClipboard = (data: DatabaseSchemaHistory) => {
 
   switch (type) {
     case "text":
-      return writeText(value);
+      return writeText(formatJsonText(value));
     case "image":
       return writeImage(value);
     case "files":
@@ -41,7 +42,7 @@ export const pasteToClipboard = async (
       await writeText(value.join("\n"));
     } else if (type === "text") {
       ignoreNextClipboardChange();
-      await writeText(search);
+      await writeText(formatJsonText(search));
     } else {
       await writeToClipboard(data);
     }

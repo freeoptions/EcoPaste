@@ -14,12 +14,14 @@ import {
   updateHistory,
 } from "@/database/history";
 import type { State } from "@/pages/Main";
+import { writeToClipboard } from "@/plugins/clipboard";
 import { clipboardStore } from "@/stores/clipboard";
 import { consumeIgnoredClipboardChange } from "@/stores/clipboardRuntime";
 import type { DatabaseSchemaHistory } from "@/types/database";
 import { formatDate } from "@/utils/dayjs";
 import { mergeDuplicateHistoryItems } from "@/utils/history";
 import { isBlank } from "@/utils/is";
+import { formatJsonText } from "@/utils/json";
 
 export const useClipboard = (
   state: State,
@@ -62,7 +64,16 @@ export const useClipboard = (
       } else if (text) {
         if (isBlank(text.value)) return;
 
-        Object.assign(data, text);
+        const formattedValue = formatJsonText(text.value);
+
+        Object.assign(data, text, {
+          search: formattedValue,
+          value: formattedValue,
+        });
+
+        if (formattedValue !== text.value) {
+          await writeToClipboard(data);
+        }
       } else if (image) {
         Object.assign(data, image, {
           group: "files",
