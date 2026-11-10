@@ -1,10 +1,10 @@
-import { useMount } from "ahooks";
+import { useMount, useUnmount } from "ahooks";
 import { cloneDeep } from "es-toolkit";
 import { isEmpty, remove } from "es-toolkit/compat";
 import { nanoid } from "nanoid";
+import { useRef } from "react";
 import {
   type ClipboardChangeOptions,
-  onClipboardChange,
   startListening,
 } from "tauri-plugin-clipboard-x-api";
 import { fullName, isDir } from "tauri-plugin-fs-pro-api";
@@ -15,8 +15,8 @@ import {
 } from "@/database/history";
 import type { State } from "@/pages/Main";
 import { writeToClipboard } from "@/plugins/clipboard";
+import { onClipboardChange } from "@/plugins/clipboardListener";
 import { clipboardStore } from "@/stores/clipboard";
-import { consumeIgnoredClipboardChange } from "@/stores/clipboardRuntime";
 import type { DatabaseSchemaHistory } from "@/types/database";
 import { formatDate } from "@/utils/dayjs";
 import { mergeDuplicateHistoryItems } from "@/utils/history";
@@ -27,12 +27,16 @@ export const useClipboard = (
   state: State,
   options?: ClipboardChangeOptions,
 ) => {
+  const unlistenRef = useRef(() => {});
+  const disposedRef = useRef(false);
+
+  useUnmount(() => {
+    disposedRef.current = true;
+    unlistenRef.current();
+  });
+
   useMount(async () => {
-    await startListening();
-
-    onClipboardChange(async (result) => {
-      if (consumeIgnoredClipboardChange()) return;
-
+    const unlisten = await onClipboardChange(async (result) => {
       const { files, image, text } = result;
 
       if (isEmpty(result) || Object.values(result).every(isEmpty)) return;
@@ -45,21 +49,25 @@ export const useClipboard = (
         search: text?.value,
       } as DatabaseSchemaHistory;
 
-      if (files) {
-        const nextFiles = [];
+      if (image) {
+        Object.assign(data, image, {
+          group: "files",
+        });
+      } else if (files) {
+        const nextFileList = [];
 
         for (const path of files.value) {
           if (await isDir(path)) continue;
 
-          nextFiles.push(path);
+          nextFileList.push(path);
         }
 
-        if (nextFiles.length === 0) return;
+        if (nextFileList.length === 0) return;
 
         Object.assign(data, files, {
           group: "files",
-          search: nextFiles.join(" "),
-          value: nextFiles,
+          search: nextFileList.join(" "),
+          value: nextFileList,
         });
       } else if (text) {
         if (isBlank(text.value)) return;
@@ -74,10 +82,6 @@ export const useClipboard = (
         if (formattedValue !== text.value) {
           await writeToClipboard(data);
         }
-      } else if (image) {
-        Object.assign(data, image, {
-          group: "files",
-        });
       }
 
       const sqlData = cloneDeep(data);
@@ -121,7 +125,15 @@ export const useClipboard = (
         state.list = mergeDuplicateHistoryItems([data, ...state.list]);
       }
 
-      insertHistory(sqlData);
+      await insertHistory(sqlData);
     }, options);
+
+    if (disposedRef.current) {
+      unlisten();
+      return;
+    }
+
+    unlistenRef.current = unlisten;
+    await startListening();
   });
 };

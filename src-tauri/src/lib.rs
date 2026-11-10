@@ -1,3 +1,4 @@
+mod clipboard;
 mod core;
 
 use core::{prevent_default, setup};
@@ -7,6 +8,9 @@ use tauri_plugin_log::{Target, TargetKind};
 
 pub fn run() {
     let app = Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            clipboard::clipboard_sequence_number
+        ])
         .setup(|app| {
             let app_handle = app.handle();
             let main_window = app.get_webview_window(MAIN_WINDOW_LABEL).unwrap();
