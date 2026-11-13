@@ -1,3 +1,16 @@
+* {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.ms-track-box,
+.rc-virtual-list-scrollbar {
+  display: none !important;
+}
+
 html {
   --uno: text-color-1 antialiased select-none overscroll-none;
 
