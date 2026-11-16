@@ -1,5 +1,9 @@
 # EcoPaste 项目规则
 
+## Git 推送约定
+
+- 用户单独说“推”或“push”时，表示要求推送到GitHub，视为明确的推送授权。
+
 ## Windows Release 交付
 
 - Windows Release 构建成功后，只复制主程序 `EcoPaste.exe`。
