@@ -39,6 +39,7 @@ export interface State {
   group: DatabaseSchemaGroupId;
   search?: string;
   pinned?: boolean;
+  toolboxOpen?: boolean;
   activeId?: string;
   list: DatabaseSchemaHistory[];
   eventBus?: EventEmitter<EventBusPayload>;
@@ -124,6 +125,8 @@ const Main = () => {
 
   // 监听粘贴为纯文本的快捷键
   useKeyPress(shortcut.pastePlain, (event) => {
+    if (state.toolboxOpen) return;
+
     event.preventDefault();
 
     const data = find(state.list, { id: state.activeId });
@@ -143,7 +146,7 @@ const Main = () => {
   // 监听快速粘贴的快捷键
   useRegister(
     async (event) => {
-      if (!globalStore.shortcut.quickPaste.enable) return;
+      if (state.toolboxOpen || !globalStore.shortcut.quickPaste.enable) return;
 
       const index = Number(last(event.shortcut));
 

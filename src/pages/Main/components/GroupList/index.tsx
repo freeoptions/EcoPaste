@@ -36,6 +36,8 @@ const GroupList = () => {
   ];
 
   useKeyPress("tab", (event) => {
+    if (rootState.toolboxOpen) return;
+
     const index = presetGroups.findIndex((item) => item.id === rootState.group);
     const length = presetGroups.length;
 

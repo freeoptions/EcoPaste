@@ -7,6 +7,7 @@ import { clipboardStore } from "@/stores/clipboard";
 import GroupList from "../GroupList";
 import HistoryList from "../HistoryList";
 import SearchInput from "../SearchInput";
+import Toolbox from "../Toolbox";
 import WindowPin from "../WindowPin";
 
 const StandardMode = () => {
@@ -39,6 +40,8 @@ const StandardMode = () => {
           <GroupList />
 
           <Flex align="center" className="text-color-2 text-lg" gap={4}>
+            <Toolbox />
+
             <WindowPin />
 
             <UnoIcon

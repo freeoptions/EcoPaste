@@ -25,6 +25,8 @@ export const useKeyboard = (props: UseKeyboardProps) => {
   const isFocusWithin = useFocusWithin(document.body);
 
   const handleKeyPress = (event: KeyboardEvent, key: KeyType) => {
+    if (rootState.toolboxOpen) return;
+
     event.preventDefault();
 
     if (key === "home") {

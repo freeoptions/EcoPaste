@@ -1,0 +1,83 @@
+.trigger {
+  flex-shrink: 0;
+}
+
+.panel {
+  --toolbox-gap: 12px;
+  --toolbox-radius: 8px;
+
+  padding-top: 8px;
+
+  :global(.ant-form-item) {
+    margin-bottom: var(--toolbox-gap);
+  }
+
+  :global(.ant-btn:focus-visible) {
+    outline: 2px solid var(--toolbox-accent) !important;
+    outline-offset: 2px;
+  }
+}
+
+.toolTabs {
+  margin-bottom: 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+
+  :global(.ant-segmented) {
+    min-width: 100%;
+  }
+
+  :global(.ant-segmented-group) {
+    min-width: max-content;
+  }
+
+  :global(.ant-segmented-item) {
+    flex: 1 0 auto;
+  }
+
+  :global(.ant-segmented-item-label) {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.timestampUnit {
+  flex: 0 0 100px;
+}
+
+.unitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.swap {
+  margin-top: 30px;
+}
+
+.results {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.result {
+  padding: 8px 12px 12px;
+  border: 1px solid var(--toolbox-border);
+  border-radius: var(--toolbox-radius);
+  background: var(--toolbox-surface);
+}
+
+.value {
+  margin-top: 4px;
+  font-family: ui-monospace, Consolas, monospace;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  user-select: text;
+}
