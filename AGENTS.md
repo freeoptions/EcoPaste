@@ -11,6 +11,11 @@
 - 不复制 `setup.exe` 或其他安装包到交付目录。
 - 未确认 Release 构建成功前，不执行复制操作。
 
+## Windows开机自启排查
+
+- 已勾选开机自启但登录Windows后未启动时，只读检查当前用户的 `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` 中的 `EcoPaste`，以及 `Explorer\StartupApproved\Run` 中的启用状态。核对启动命令里的可执行文件是否存在，是否指向实际使用的程序。便携版移动目录后，注册项可能仍保留旧路径，应用也可能继续显示已开启。
+- 确认路径过期后，可从当前正式路径启动EcoPaste，在偏好设置里关闭再开启自启以重新登记。授权直接修复注册表时，只更新当前用户的对应启动命令，保留 `--auto-launch` 参数和Windows启用状态。核实新路径存在并已登记，实际自启结果以下次登录Windows为准。
+
 ## 构建与共享缓存约束
 
 - 依赖安装、编译检查或打包前，必须主动读取并遵守 D:\MyCodes\@UploadToGithub\AGENTS.md（共享规则），不依赖仓库外父目录自动加载；本项目已有的构建入口、交付方式及更严格限制继续适用。
