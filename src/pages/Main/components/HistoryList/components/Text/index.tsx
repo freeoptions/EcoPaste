@@ -9,7 +9,7 @@ const Text: FC<DatabaseSchemaHistory<"text">> = (props) => {
   const text = search ?? value;
 
   return (
-    <div className="line-clamp-4">
+    <div className="line-clamp-4 whitespace-pre-wrap">
       <Marker mark={rootState.search}>{text}</Marker>
     </div>
   );
